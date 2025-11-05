@@ -1,0 +1,3 @@
+За да run-нете тестовете изпълнете следните команди в терминала:
+ * pip install -r requirements-test.txt ( за инсталиране на всички необходими dependencies)
+ * pytest test_server.py -v --cov=server --cov-report=term-missing ( за пускане на тестовете)
