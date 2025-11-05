@@ -1,0 +1,33 @@
+67
+
+Name        Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------
+server.py     184     58     56      7    67%   29-51, 102->112, 110, 120-121, 128->134, 141->151, 143-147, 161, 173, 176-177, 184-185, 190-191, 195-196, 212-221, 224-235, 239-242
+-------------------------------------------------------
+TOTAL         184     58     56      7    67%
+
+Реализация на unit тестовете:
+
+Използвах pytest framework за Python, заедно с pytest-asyncio за асинхронни тестове и pytest-cov за измерване на code coverage. 
+
+Общо 20 unit теста са организирани в 6 класа по функционалност:
+- TestLogFunction (3 теста): валидира log функцията с нормални, празни и специални символи
+- TestReadHeaders (5 теста): тества четенето на HTTP headers при различни сценарии (нормални, multi-chunk, надвишаване на лимит, празни, double LF)
+- TestSendFunctions (3 теста): проверява send_ok и send_error функциите, включително exception handling
+- TestHandleClient (10 теста): най-обширните тестове - за GET, POST, празни requests, невалидни първи редове, твърде дълги редове, твърде големи bodies, exception handling
+- TestEdgeCases (6 теста): гранични случаи като случайни байтове, None стойности, невалидни headers, partial body, non-UTF8 данни
+- TestAcceptLoop (1 тест): тест за exception handling в accept loop
+
+Използвах mocking (unittest.mock) за да симулирам socket операции и async I/O без реална мрежова комуникация. Това прави тестовете бързи, изолирани и deterministic.
+
+Постигнах 67% code coverage, което надвишава изискваните 50%. Непокритите части са главно:
+- accept_loop функцията в нейния основен loop (изисква реален socket server)
+- run функцията и __main__ блока (entry points които стартират сървъра)
+- Някои exception handling paths които са трудни за симулиране с mocks
+- Timeout handling при четене на голям body
+
+Трудности:
+- Най-трудно беше да mock-на правилно асинхронните socket операции и event loop-а, особено симулирането на EOF с празни chunks
+- Тестването на limit случаите (headers/body > 10MB) без да заемам реално толкова памет
+- Някои paths в handle_client са трудни за достъпване защото зависят от timing и network conditions
+- Mock-ването на asyncio.wait_for за timeout тестове беше сложно
