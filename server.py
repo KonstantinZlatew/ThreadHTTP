@@ -15,10 +15,9 @@ HOST = "0.0.0.0"
 PORT = 9090
 
 MAX_LINE = 10 * 1024 * 1024      # 10 MB за първи ред или header line
-MAX_HEADERS = 10 * 1024 * 1024   # 10 MB общи headers (няма отделно тук)
+MAX_HEADERS = 10 * 1024 * 1024   # 10 MB общи headers
 MAX_BODY = 10 * 1024 * 1024      # 10 MB за body
 
-# пом. функции за лог
 def log(msg: str):
     ts = datetime.datetime.utcnow().isoformat() + "Z"
     line = f"[{ts}] {msg}\n"
@@ -26,13 +25,11 @@ def log(msg: str):
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(line)
 
-# Четене на линия (до \r\n или \n), с ограничение на дължината
 async def read_line(sock: socket.socket, loop: asyncio.AbstractEventLoop, max_len: int):
     buf = bytearray()
     while True:
         chunk = await loop.sock_recv(sock, 1024)
         if not chunk:
-            # клиентът затвори
             if not buf:
                 return None
             break
@@ -59,7 +56,6 @@ async def read_headers(sock: socket.socket, loop: asyncio.AbstractEventLoop, max
     while True:
         chunk = await loop.sock_recv(sock, 4096)
         if not chunk:
-            # затворен
             break
         buf.extend(chunk)
         if b'\r\n\r\n' in buf or b'\n\n' in buf:
