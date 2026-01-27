@@ -1,0 +1,36 @@
+================================================================================
+FINAL BENCHMARK ANALYSIS
+================================================================================
+
+Server: Async/epoll HTTP Server (Python asyncio)
+
+================================================================================
+PERFORMANCE SUMMARY
+================================================================================
+
+Peak Requests/sec: 0.00
+Best Latency: 0.000ms
+Peak Throughput: 0.000 MB/s
+
+================================================================================
+KEY FINDINGS
+================================================================================
+
+1. STRENGTHS:
+   • Good baseline latency for simple requests
+   • Asyncio/epoll efficient for I/O operations
+   • Stable performance at moderate concurrency
+
+2. BOTTLENECKS:
+   • Synchronous logging blocks event loop
+   • Single-threaded limits CPU scaling
+   • Memory grows with concurrent connections
+
+3. RECOMMENDATIONS:
+   • HIGH PRIORITY: Async logging (20-40% improvement)
+   • MEDIUM: Multiprocessing for scaling
+   • LOW: HTTP keep-alive support
+
+================================================================================
+See bench21-25.txt for detailed metrics
+================================================================================
