@@ -50,7 +50,6 @@ async def read_line(sock: socket.socket, loop: asyncio.AbstractEventLoop, max_le
     remainder = bytes(buf[idx+1:])
     return line, remainder
 
-# Чете headers до двойна CRLF, с лимит
 async def read_headers(sock: socket.socket, loop: asyncio.AbstractEventLoop, max_total: int):
     buf = bytearray()
     while True:
@@ -82,7 +81,6 @@ async def handle_client(client_sock: socket.socket, addr, loop):
         if first_line_end == -1:
             first_line_end = raw_headers.find(b'\n')
         if first_line_end == -1:
-            # нямаме валиден първи ред
             log(f"{peer} INVALID_FIRST_LINE")
             await send_error(client_sock)
             return
@@ -111,7 +109,6 @@ async def handle_client(client_sock: socket.socket, addr, loop):
 
         method = first_line.split()[0] if first_line.split() else "UNKNOWN"
 
-        # Ако има Content-Length -> прочети body (но с лимит)
         body = b""
         content_length = None
         if 'content-length' in headers:

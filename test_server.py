@@ -6,9 +6,8 @@ Unit tests за HTTP сървъра.
 
 import pytest
 import asyncio
-import socket
 from unittest.mock import Mock, AsyncMock, patch, MagicMock
-import datetime
+
 
 # Import на функциите от server.py
 import sys
